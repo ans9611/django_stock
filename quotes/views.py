@@ -4,14 +4,14 @@ from django.shortcuts import render, redirect
 from .models import Stock
 from .forms import StockForm
 from django.contrib import messages
+from security import safe_requests
 
 def home(request):
-	import requests 
 	import json 
 
 	if request.method == 'POST':
 		ticker = request.POST['ticker']
-		api_request = requests.get("https://cloud.iexapis.com/stable/stock/" + ticker + "/quote?token=pk_062031d20883444f9ea74e2610fe2011")
+		api_request = safe_requests.get("https://cloud.iexapis.com/stable/stock/" + ticker + "/quote?token=pk_062031d20883444f9ea74e2610fe2011")
 
 		try:
 			api = json.loads(api_request.content)
@@ -34,7 +34,6 @@ def about(request):
 
 
 def add_stock(request):
-	import requests 
 	import json 
 
 	if request.method == 'POST':
@@ -49,7 +48,7 @@ def add_stock(request):
 		ticker = Stock.objects.all()
 		output = []
 		for ticker_item in ticker:
-			api_request = requests.get("https://cloud.iexapis.com/stable/stock/" + str(ticker_item) + "/quote?token=pk_062031d20883444f9ea74e2610fe2011")
+			api_request = safe_requests.get("https://cloud.iexapis.com/stable/stock/" + str(ticker_item) + "/quote?token=pk_062031d20883444f9ea74e2610fe2011")
 			try:
 				api = json.loads(api_request.content)
 				output.append(api)
